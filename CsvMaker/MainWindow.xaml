@@ -1,0 +1,116 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
+        x:Class="CsvMaker.MainWindow"
+        Title="CSV Maker 1.00" Height="500" MinHeight="500" MinWidth="1100" Width="887" FontSize="14" Background="White" ResizeMode="CanResize" >
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="112" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted" CanExecute="OpenCmdCanExecute" />
+        <CommandBinding Command="ApplicationCommands.Save" Executed="SaveCmdExecuted" CanExecute="SaveCmdCanExecute" />
+        <CommandBinding Command="ApplicationCommands.Close" Executed="CloseCmdExecuted" />
+    </Window.CommandBindings>
+    <Grid VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="245" />
+            <ColumnDefinition Width="1*" MinWidth="320" />
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" HorizontalAlignment="Left" Background="White" BorderBrush="Black">
+            <MenuItem Header="_File">
+                <MenuItem Command="ApplicationCommands.Open" Header="_Load File..."/>
+                <MenuItem Command="ApplicationCommands.Save" Header="_Select Save Location..." />
+                <Separator />
+                <MenuItem Command="ApplicationCommands.Close" Header="_Exit" />
+            </MenuItem>
+            <MenuItem Header="_Run">
+                <MenuItem Header="Create CSV" IsEnabled="{Binding ElementName=btnCreateCsv, Path=IsEnabled}" Click="CreateCsvClicked"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="About..." Click="AboutMenuClicked" IsEnabled="False"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch">
+            <GroupBox Header="Select files" Margin="2,2,2,2" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <StackPanel VerticalAlignment="Stretch">
+                    <Button x:Name="btnInputFile" Style ="{StaticResource ButtonStyle}" Margin="0,7,0,0" Click="OpenCmdExecuted" MouseEnter="btnInputFile_MouseEnter" MouseLeave="MouseLeaveArea">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Images/open-file-icon.png" Width="20" Height="20" Margin="0,0,1,0" />
+                            <TextBlock Text="Load Files..." />
+                        </StackPanel>
+                    </Button>
+                    <Label x:Name="lblSourceFilePath" Content="No input files selected." Height="43" MaxWidth="193" MouseLeave="MouseLeaveArea" MouseEnter="lblSourceFilePath_MouseEnter" />
+                    <Button x:Name="btnSaveFileTo" Style="{StaticResource ButtonStyle}" Margin="0,5,0,0" Click="SaveCmdExecuted" HorizontalAlignment="Center" MouseEnter="btnSaveFileTo_MouseEnter" MouseLeave="MouseLeaveArea">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Images/save-file.ico" Width="20" Height="20" Margin="0,0,4,0" />
+                            <TextBlock Text="Save To..." />
+                        </StackPanel>
+                    </Button>
+                    <Label x:Name="lblOutputFilePath" Content="No output path specified." MaxWidth="193" MouseEnter="lblOutputFilePath_MouseEnter" MouseLeave="MouseLeaveArea"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Options" Margin="2,2,2,2">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="cbEncloseWithQualifiers" Content="Enclose every field with this qualifier:" Margin="0,2,5,0" MouseLeave="MouseLeaveArea" MouseEnter="cbEncloseWithQualifiers_MouseEnter" Checked="cbEncloseWithQualifiers_Checked" Unchecked="cbEncloseWithQualifiers_Unchecked" Click="cbEncloseWithQualifiers_Click" />
+                    <TextBox x:Name="tbQualifier" MaxLength="1" Height="25" VerticalAlignment="Center" HorizontalAlignment="Left" Width="23" FontSize="16" GotFocus="tbQualifier_GotFocus" MouseLeave="MouseLeaveArea" MouseEnter="tbQualifier_MouseEnter" TextChanged="tbQualifier_TextChanged" />
+                </StackPanel>
+            </GroupBox>
+            <Button x:Name="btnCreateCsv" Content="Create CSV" Margin="0,56,0,0" IsEnabled="False" Opacity="0.5" Foreground="Red" FontWeight="Bold" Click="CreateCsvClicked" MouseEnter="btnCreateCsv_MouseEnter" MouseLeave="MouseLeaveArea" Width="208" Height="55" FontSize="24"/>
+        </StackPanel>
+        <Grid VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" x:Name="grpInputFileType" Margin="2,2,2,0" Header="Input File Type" VerticalAlignment="Top">
+                <StackPanel VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="rbnDelimited" Margin="0,4,5,0" GroupName="FileTypeSelection" IsChecked="True" Content="Delimited, with the following character:"/>
+                        <ComboBox x:Name="cbDelimiter" IsEnabled="{Binding ElementName=rbnDelimited, Path=IsChecked}" Width="97" Margin="0,0,5,0" MouseLeave="MouseLeaveArea" MouseEnter="cbDelimiter_MouseEnter" Height="25">
+                            <ComboBoxItem x:Name="cbiSelect" Content="Select one..." Foreground="Gray" IsEnabled="False" IsSelected="True"/>
+                            <ComboBoxItem x:Name="cbiTab" Selected="cbDelimiterItemSelected" Content="Tab"/>
+                            <ComboBoxItem x:Name="cbiPipe" Selected="cbDelimiterItemSelected" Content="Pipe"/>
+                            <ComboBoxItem x:Name="cbiSemicolon" Selected="cbDelimiterItemSelected" Content="Semicolon"/>
+                            <ComboBoxItem x:Name="cbiOther" Selected="cbDelimiterItemSelected" Content="Other..."/>
+                        </ComboBox>
+                        <TextBox x:Name="tbDelimiter" IsEnabled="{Binding ElementName=cbiOther, Path=IsSelected}" MaxLength="1" Height="25" HorizontalAlignment="Left" Width="23" FontSize="16" Margin="0,2,0,0" GotFocus="tbDelimiter_GotFocus" MouseLeave="MouseLeaveArea" MouseEnter="tbDelimiter_MouseEnter" TextChanged="tbDelimiter_TextChanged" />
+                    </StackPanel>
+                    <RadioButton x:Name="rbnFixed" DockPanel.Dock="Left" GroupName="FileTypeSelection" Content="Fixed length data file" Unchecked="rbnFixed_Unchecked"/>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Height="28" Margin="27,0,0,0" >
+                        <Label Content="with field lengths as specified in this layout file: " />
+                        <Button x:Name="btnLoadLayoutFile" Content="Load Layout File..." Click="btnLoadLayoutFile_Click" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Height="28" Margin="27,0,0,0" >
+                        <Label Content="or manually specified here:" VerticalAlignment="Center" HorizontalAlignment="Left" Height="28" Margin="0,0,5,0"/>
+                        <TextBox x:Name="tbFieldLengths" GotFocus="tbFieldLengths_GotFocus"  HorizontalAlignment="Left" Foreground="Gray" FontStyle="Italic" Width="344" Height="26" VerticalAlignment="Bottom" LostFocus="tbFieldLengths_LostFocus" MouseLeave="MouseLeaveArea" MouseEnter="tbFieldLengths_MouseEnter" TextChanged="tbFieldLengths_TextChanged" />
+                        <Label x:Name="lblNumFields" Width="162" Margin="0,-3,0,3"/>
+                    </StackPanel>
+                    <RadioButton x:Name="rbnExcelXls" GroupName="FileTypeSelection" Margin="0,2,0,0" Content="Excel 98-2003 file (.XLS)"/>
+                    <RadioButton x:Name="rbnExcelXlsx" GroupName="FileTypeSelection" Margin="0,2,0,0" Content="Excel 2007 and later (.XLSX)"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Margin="2,0,5,3" Header="Status" Grid.Row="1">
+                <ScrollViewer x:Name="svStatus" ScrollChanged="ScrollViewer_ScrollChanged">
+                    <TextBlock x:Name="tblStatus" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontFamily="Courier New" Margin="2" 
+                               MouseLeave="MouseLeaveArea" MouseEnter="tblStatus_MouseEnter" 
+                               ToolTipService.InitialShowDelay="50" ToolTipService.BetweenShowDelay="50" ToolTipService.ShowDuration="30000" ToolTipService.Placement="Top"/>
+                </ScrollViewer>
+            </GroupBox>
+        </Grid>
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Background="Beige" Height="Auto">
+            <StatusBarItem>
+                <TextBlock x:Name="tblStatusBar" Text="Tips will appear as you mouse over the interface."/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
