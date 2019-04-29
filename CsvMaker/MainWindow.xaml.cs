@@ -153,7 +153,7 @@ namespace CsvMaker
             foreach (string file in files)
             {
                 // Print current activity in status display
-                string msg = "{Environment.NewLine}Converting " + Path.GetFileName(file) + "...";
+                string msg = $"{Environment.NewLine}Converting {Path.GetFileName(file)} ...";
                 string tooltip = "Started " + DateTime.Now.ToString();
                 WriteToStatusDisplay(msg, tooltip, Brushes.DarkOrange);
 
@@ -162,15 +162,17 @@ namespace CsvMaker
                 switch (excelFileType.ToLower())
                 {
                     case ".xls":
-                        connectionString = String.Format(@"Provider=Microsoft.ACE.OLEDB.12.0; 
-                                                            Data Source={0}; 
+                        connectionString = String.Format(@"Provider=Microsoft.ACE.OLEDB.16.0; 
+                                                            Data Source={0}; OLE DB Services=-1;
                                                             Extended Properties='Excel 8.0; HDR=Yes;'"
-                                                            , file); // HDR=Yes indicates that the first row contains column names, not data
+                                                            , file); 
+                                                            // HDR=Yes indicates that the first row contains column names, not data
                         break;
                     case ".xlsx":
-                        connectionString = String.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;
-                                                            Data Source={0};
-                                                            Extended Properties='Excel 12.0 Xml; HDR=YES; IMEX=1;'" // IMEX=1 treats all data as text
+                        connectionString = String.Format(@"Provider=Microsoft.ACE.OLEDB.16.0;
+                                                            Data Source={0}; OLE DB Services=-1;
+                                                            Extended Properties='Excel 12.0 Xml; HDR=YES; IMEX=1;'"
+                                                            // IMEX=1 treats all data as text
                                                             , file);
                         break;
                     default:
@@ -388,8 +390,8 @@ namespace CsvMaker
             {
                 if (ValidateInputSuccess()) // Check whether parameters of the delimited file were correctly specified
                 {
-                    string msg = "{Environment.NewLine}{Environment.NewLine}Converting delimited data to CSV...{Environment.NewLine}" +
-                                    "==========================================={Environment.NewLine}";
+                    string msg = $"{Environment.NewLine}{Environment.NewLine}Converting delimited data to CSV...{Environment.NewLine}" +
+                                    $"==========================================={Environment.NewLine}";
                     string tooltipText = "Job started " + DateTime.Now.ToString();
                     Dispatcher.Invoke( () => WriteToStatusDisplay(msg, tooltipText, Brushes.Black), DispatcherPriority.Background );
                     
@@ -408,8 +410,8 @@ namespace CsvMaker
             {
                 if (ValidateInputSuccess()) // Check whether parameters of the fixed length file were correctly specified
                 {
-                    string msg = "{Environment.NewLine}{Environment.NewLine}Converting fixed length data to CSV...{Environment.NewLine}" +
-                                    "============================================{Environment.NewLine}";
+                    string msg = $"{Environment.NewLine}{Environment.NewLine}Converting fixed length data to CSV...{Environment.NewLine}" +
+                                    $"============================================{Environment.NewLine}";
                     string tooltipText = "Job started " + DateTime.Now.ToString();
                     WriteToStatusDisplay(msg, tooltipText, Brushes.Black);
                     bool x = await BeginFixedLengthToCsvConversionAsync(this.inputFiles, qualifier);
@@ -419,8 +421,8 @@ namespace CsvMaker
             {
                 if (ValidateInputSuccess()) // Check whether parameters of the delimited file were correctly specified
                 {
-                    string msg = "{Environment.NewLine}{Environment.NewLine}Converting Excel (.xls) to CSV...{Environment.NewLine}" +
-                                    "============================================{Environment.NewLine}";
+                    string msg = $"{Environment.NewLine}{Environment.NewLine}Converting Excel (.xls) to CSV...{Environment.NewLine}" +
+                                    $"============================================{Environment.NewLine}";
                     string tooltipText = "Job started " + DateTime.Now.ToString();
                     WriteToStatusDisplay(msg, tooltipText, Brushes.Black);
 
@@ -431,8 +433,8 @@ namespace CsvMaker
             {
                 if (ValidateInputSuccess()) // Check whether parameters of the delimited file were correctly specified
                 {
-                    string msg = "{Environment.NewLine}{Environment.NewLine}Converting Excel (.xlsx) to CSV...{Environment.NewLine}" +
-                                       "==========================================={Environment.NewLine}";
+                    string msg = $"{Environment.NewLine}{Environment.NewLine}Converting Excel (.xlsx) to CSV...{Environment.NewLine}" +
+                                       $"==========================================={Environment.NewLine}";
                     string tooltipText = "Job started " + DateTime.Now.ToString();
                     WriteToStatusDisplay(msg, tooltipText, Brushes.Black);
                     bool x = await BeginExcelToCsvConversionAsync(this.inputFiles, ".xlsx", qualifier);
@@ -446,7 +448,7 @@ namespace CsvMaker
                 string dateFormat = "MMM d";
                 string time = DateTime.Now.ToString(timeFormat);
                 string date = DateTime.Now.ToString(dateFormat);
-                WriteToStatusDisplay("{Environment.NewLine}{Environment.NewLine}Job complete.", "Job was completed at " + time + " on " + date, Brushes.Black);
+                WriteToStatusDisplay($"{Environment.NewLine}{Environment.NewLine}Job complete.", "Job was completed at " + time + " on " + date, Brushes.Black);
             }
         }
 
@@ -499,7 +501,7 @@ namespace CsvMaker
 
         private void MouseLeaveArea(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            tblStatusBar.Text = "Interface tips will appear here as you mouse over the various controls.";
+            tblStatusBar.Text = "Relevant tips will appear here as you mouse over the various controls.";
         }
 
         private void btnSaveFileTo_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)

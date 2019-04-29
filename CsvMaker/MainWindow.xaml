@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
         x:Class="CsvMaker.MainWindow"
-        Title="CSV Maker 1.00" Height="500" MinHeight="500" MinWidth="1100" Width="887" FontSize="14" Background="White" ResizeMode="CanResize" >
+        Title="CSV Maker (Alpha)" Height="500" MinHeight="500" MinWidth="1100" Width="887" FontSize="14" Background="White" ResizeMode="CanResize" >
     <Window.Resources>
         <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="Width" Value="112" />
@@ -109,7 +109,7 @@
         </Grid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Background="Beige" Height="Auto">
             <StatusBarItem>
-                <TextBlock x:Name="tblStatusBar" Text="Tips will appear as you mouse over the interface."/>
+                <TextBlock x:Name="tblStatusBar" Text="Tips will appear as you mouse over the interface." FontSize="14"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

@@ -159,7 +159,8 @@ namespace CsvMaker
                     {
                         if (!dr.IsDBNull(i)) // field is not empty, so add its text to the CsvRow
                         {
-                            string field = dr.GetString(i).Trim();
+                            //string field = dr.GetString(i).Trim();
+                            string field = dr[i].ToString().Trim();
                             row.Add(field);
                         }
                         else // field is empty, so add a blank string to the CsvRow
